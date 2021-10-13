@@ -1,0 +1,28 @@
+.container {
+  padding: 20px; 
+  text-align: left; 
+  page-break-after: always;
+}
+.ref {
+  height: calc(100vh - 255px);
+  overflow: auto; 
+  padding-bottom: 20px;
+}
+.address {
+  line-height: .7em;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: .9em;
+}
+.description {
+  font-weight: bold;
+  color: #585858;
+}
+.diagnosis {
+  font-weight: bold;
+}
+@media print {
+  #noPrint {
+    visibility: hidden;
+  }
+}
