@@ -1,5 +1,5 @@
 .container {
-  padding: 20px; 
+  padding: 20px 20px 0px 20px; 
   text-align: left; 
   page-break-after: always;
 }
@@ -13,6 +13,7 @@
   text-transform: uppercase;
   font-weight: bold;
   font-size: .9em;
+  text-align: center;
 }
 .description {
   font-weight: bold;
@@ -20,6 +21,20 @@
 }
 .diagnosis {
   font-weight: bold;
+}
+.doctors {
+  padding-top: 0px; 
+  text-align: center;
+  margin-bottom: 0px;
+}
+.alignDate {
+  text-align: right;
+}
+.closing {
+  margin-top: 50px;
+}
+.footer {
+  margin-top: 190px;
 }
 @media print {
   #noPrint {
