@@ -1,0 +1,1 @@
+[name] ({abbrev}) had the privilege of examining your recent {description} that was performed by your clinician. At their request, we are sending this letter to inform you that the screening {description} was {originalDiagnosisCode} there is no evidence of changes related to {condition}.
