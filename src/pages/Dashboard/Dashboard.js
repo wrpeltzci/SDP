@@ -1,7 +1,6 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@mui/styles';
-import { Card, CardContent, CardHeader, Grid, TextField, Button } from '@mui/material';
-import { DateRange } from '@mui/icons-material';
+import { Card, CardContent, CardHeader, Grid, Button } from '@mui/material';
 import { Editor } from '@tinymce/tinymce-react';
 
 const useStyles = makeStyles((theme) => ({
@@ -27,94 +26,62 @@ const useStyles = makeStyles((theme) => ({
   },
   card: {
     height: '100%'
+  },
+  copied: {
+    color: 'green',
+    fontSize: '13px'
   }
 }));
 
-const data = [
-  {
-    id: 1,
-    patientName: 'Joe Smith',
-    street: '111 Main St',
-    city: 'Houston',
-    cstate: 'TX',
-    zip: '99999',
-    name: 'ABC Company',
-    abbrev: 'ABC',
-    description: 'short description',
-    originalDiagnosisCode: 'normal',
-    condition: 'condition',
-  }
-];
-
 const Dashboard = () => {
   const classes = useStyles();
-  const editorRef = useRef(null);
-
   const [viewer, setViewer] = useState('');
   const [fileError, setFileError] = useState(false);
+  const [dataIndex, setDataIndex] = useState(0);
   const [file, setFile] = useState();
-  const [files, setFiles] = useState();
+  const [data, setData] = useState();
   const [fields, setFields] = useState([]);
   const [value, setValue] = useState('');
-  const [markup, setMarkup] = useState({});
-  const [editorState, setEditorState] = useState(undefined);
-  const [fieldWarning, setFieldWarning] = useState(false);
+  const [editorState, setEditorState] = useState('');
+  const [visible, setVisible] = useState(false);
 
-  // const handleTextChange = (e) => {
-  //   setViewer(e.target.value);
-  // }
+  function updateViewer() {
+    if (editorState) {
+      let currentData = editorState;
+      for (var key in fields) {
+        currentData = currentData.replaceAll(`&lt;${fields[key]}&gt;`, data[dataIndex][fields[key]]);
+      };
+      setViewer(currentData);
+    };
+  };
 
-  // const replaceData = (original, replaceString, newValue) => {
-  //   return original.replaceAll(replaceString, newValue);
-  // }
+  useEffect(() => {
+    updateViewer();
+  }, [dataIndex]);
 
-  // const replaceArray = (dataBlock) => {
-  //   return fields.map(item => {
-  //     dataBlock.replace(`${item}`, data[0][item])
-  //   })
-  // }
+  const Expire = props => {
+    useEffect(() => {
+      setTimeout(() => {
+        setVisible(false);
+      }, props.delay);
+    }, [props.delay]);
+
+    return visible ? <div>{props.children}</div> : <div />;
+  };
 
   function handleOptionChange(e) {
     const newValue = e.target.value;
     setValue(newValue);
-    setEditorState('&lt;fieldname&gt;');
-    if (markup[newValue]) {
-      setViewer(markup[newValue])
-      const textReplace = markup[newValue].replaceAll(files[0][newValue], '&lt;fieldname&gt;')
-      setEditorState(textReplace);
-    } else {
-      setViewer('');
-    };
+    navigator.clipboard.writeText(`<${newValue}>`);
+    setVisible(true);
   };
 
-  function log() {
+  function preview() {
     if (!file) {
       setFileError(true);
     } else {
       setFileError(false);
-      if (editorState) {
-        let currentData = editorState;
-        // let newVal = currentData 
-        //fields.map(item => replaceData(currentData, `{${item}}`, data[0][item]))
-        // newVal = replaceData(newVal, '{name}', data[0]['name']);
-        // newVal = replaceData(newVal, '{abbrev}', data[0]['abbrev']);
-        // newVal = replaceData(newVal, '{description}', data[0]['description']);
-        // newVal = replaceData(newVal, '{originalDiagnosisCode}', data[0]['originalDiagnosisCode']);
-        // newVal = replaceData(newVal, '{condition}', data[0]['condition']);
-
-        currentData = currentData.replaceAll('&lt;fieldname&gt;', files[0][value]);
-        setViewer(currentData);
-        setMarkup({ ...markup, [value]: currentData });
-      };
-    };
-  };
-
-  function logAll() {
-    if (!file) {
-      setFileError(true);
-    } else {
-      setFileError(false);
-      setViewer(markup);
+      updateViewer();
     };
   };
 
@@ -124,18 +91,16 @@ const Dashboard = () => {
     const fileReader = new FileReader();
     fileReader.readAsText(evt.target.files[0], "UTF-8");
     fileReader.onload = e => {
-      // setFiles(e.target.result);
       const fileToJSON = JSON.parse(e.target.result);
-      setFiles(fileToJSON);
-
+      setData(fileToJSON);
       const keys = [];
       fileToJSON.map((item, index) => {
         if (index === 0) {
           Object.keys(item).map((objKey, index) => {
             keys.push(objKey)
           });
-        }
-      })
+        };
+      });
       setFields(keys);
       setFileError(false);
     };
@@ -169,7 +134,7 @@ const Dashboard = () => {
           <Grid item xs={12} md={3}>
             File: {file?.name}
           </Grid>
-          {file && <Grid item xs={12} md={4}>
+          {file && <Grid item xs={12} md={2}>
             <select value={value}
               onChange={e => handleOptionChange(e)}>
               <option value="">Select Field</option>
@@ -179,6 +144,13 @@ const Dashboard = () => {
                 )
               }
             </select>
+            {visible &&
+              <Grid style={{ marginTop: "4px", marginBottom: "-27px" }} item xs={12} md={3}>
+                <Expire delay="2000">
+                  <p className={classes.copied}>Copied!</p>
+                </Expire>
+              </Grid>
+            }
           </Grid>}
         </Grid>
       </Grid>
@@ -189,7 +161,6 @@ const Dashboard = () => {
             <Grid container spacing={2} direction="column">
               <Grid item xs={12}>
                 <Editor
-                  // onInit={(evt, editor) => editorRef.current = editorState}
                   initialValue=''
                   editorState={editorState} //I think we can populate this before rendering if the user populates a field with their template. So a useState prop.
                   init={{
@@ -204,7 +175,8 @@ const Dashboard = () => {
                       'bold italic backcolor | alignleft aligncenter ' +
                       'alignright alignjustify | bullist numlist outdent indent | ' +
                       'removeformat | help',
-                    content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
+                    content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
+                    contextmenu: "paste | link image inserttable"
                   }}
                   value={editorState}
                   onEditorChange={(editor) => setEditorState(editor)}
@@ -212,8 +184,8 @@ const Dashboard = () => {
                 />
               </Grid>
               <Grid item xs={12}>
-                <button onClick={log}>Save & Preview</button>
-                <button style={{ marginLeft: "8px" }} onClick={logAll}>Preview All</button>
+                <button onClick={preview}>Preview</button>
+                <button style={{ marginLeft: "8px" }} onClick={() => { }}>Print</button>
               </Grid>
             </Grid>
           </CardContent>
@@ -222,12 +194,14 @@ const Dashboard = () => {
       <Grid item xs={12} md={6} className={classes.block}>
         <Card className={classes.card}>
           <CardHeader title="Viewer" />
+          {viewer &&
+            <Grid style={{ marginTop: "15px", marginLeft: "15px" }} item xs={12}>
+              <button disabled={dataIndex <= 0 && true} onClick={() => { setDataIndex(dataIndex - 1); preview(); }}>&lt;</button>
+              <button disabled={dataIndex >= data.length - 1 && true} style={{ marginLeft: "8px" }} onClick={() => { setDataIndex(dataIndex + 1); preview(); }}>&gt;</button>
+            </Grid>
+          }
           <CardContent>
-            {typeof viewer === 'object' ?
-              Object.keys(viewer).map((key) => { return <div key={key} dangerouslySetInnerHTML={{ __html: viewer[key] }} /> })
-              :
-              <div dangerouslySetInnerHTML={{ __html: viewer }} />
-            }
+            <div dangerouslySetInnerHTML={{ __html: viewer }} />
           </CardContent>
         </Card>
       </Grid>
