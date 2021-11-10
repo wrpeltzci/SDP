@@ -169,9 +169,10 @@ const Dashboard = () => {
                     plugins: [
                       'advlist autolink lists link image charmap print preview anchor',
                       'searchreplace visualblocks code fullscreen',
-                      'insertdatetime media table paste code help wordcount'
+                      'insertdatetime media table paste code help wordcount',
+                      'code'
                     ],
-                    toolbar: 'undo redo | formatselect | ' +
+                    toolbar: 'undo redo | formatselect | code |' +
                       'bold italic backcolor | alignleft aligncenter ' +
                       'alignright alignjustify | bullist numlist outdent indent | ' +
                       'removeformat | help',
