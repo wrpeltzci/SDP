@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@mui/styles';
 import { Card, CardContent, CardHeader, Grid, Button } from '@mui/material';
 import { Editor } from '@tinymce/tinymce-react';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -36,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
 const Dashboard = () => {
   const classes = useStyles();
   const [viewer, setViewer] = useState('');
-  const [fileError, setFileError] = useState(false);
+  const [fileError, setFileError] = useState('');
   const [dataIndex, setDataIndex] = useState(0);
   const [file, setFile] = useState();
   const [data, setData] = useState();
@@ -44,10 +45,14 @@ const Dashboard = () => {
   const [value, setValue] = useState('');
   const [editorState, setEditorState] = useState('');
   const [visible, setVisible] = useState(false);
+  const [content, setContent] = useState('');
+  const [notSaved, setNotSaved] = useState(false);
+
 
   function updateViewer() {
     if (editorState) {
       let currentData = editorState;
+      setContent(currentData);
       for (var key in fields) {
         currentData = currentData.replaceAll(`&lt;${fields[key]}&gt;`, data[dataIndex][fields[key]]);
       };
@@ -78,10 +83,13 @@ const Dashboard = () => {
 
   function preview() {
     if (!file) {
-      setFileError(true);
+      setFileError('No JSON file loaded!');
     } else {
-      setFileError(false);
+      if (fileError) {
+        setFileError(false);
+      }
       updateViewer();
+      setNotSaved(false);
     };
   };
 
@@ -91,18 +99,24 @@ const Dashboard = () => {
     const fileReader = new FileReader();
     fileReader.readAsText(evt.target.files[0], "UTF-8");
     fileReader.onload = e => {
-      const fileToJSON = JSON.parse(e.target.result);
-      setData(fileToJSON);
-      const keys = [];
-      fileToJSON.map((item, index) => {
-        if (index === 0) {
-          Object.keys(item).map((objKey, index) => {
-            keys.push(objKey)
-          });
+      try {
+        const fileToJSON = JSON.parse(e.target.result);
+        setData(fileToJSON);
+        const keys = [];
+        fileToJSON.map((item, index) => {
+          if (index === 0) {
+            Object.keys(item).map((objKey, index) => {
+              keys.push(objKey)
+            });
+          };
+        });
+        setFields(keys);
+        if (fileError) {
+          setFileError(false);
         };
-      });
-      setFields(keys);
-      setFileError(false);
+      } catch (e) {
+        setFileError('JSON Error:' + e);
+      };
     };
   };
 
@@ -111,7 +125,7 @@ const Dashboard = () => {
       <Grid item xs={12} className={classes.actionBar}>
         {fileError &&
           <div className="alert alert-danger" role="alert">
-            No JSON file loaded!
+            {fileError}
           </div>
         }
         <Grid container spacing={2} alignItems="stretch">
@@ -131,11 +145,13 @@ const Dashboard = () => {
               </Button>
             </label>
           </Grid>
-          <Grid item xs={12} md={3}>
-            File: {file?.name}
-          </Grid>
+          {file &&
+            <Grid style={{ marginTop: "4px" }} item xs={12} md={3}>
+              File: {file?.name}
+            </Grid>
+          }
           {file && <Grid item xs={12} md={2}>
-            <select value={value}
+            <select class="form-select" value={value}
               onChange={e => handleOptionChange(e)}>
               <option value="">Select Field</option>
               {
@@ -145,7 +161,7 @@ const Dashboard = () => {
               }
             </select>
             {visible &&
-              <Grid style={{ marginTop: "4px", marginBottom: "-27px" }} item xs={12} md={3}>
+              <Grid style={{ marginTop: "4px", marginBottom: "-39px" }} item xs={12} md={3}>
                 <Expire delay="2000">
                   <p className={classes.copied}>Copied!</p>
                 </Expire>
@@ -182,13 +198,19 @@ const Dashboard = () => {
                     contextmenu: "paste | link image inserttable"
                   }}
                   value={editorState}
-                  onEditorChange={(editor) => setEditorState(editor)}
+                  onEditorChange={(editor) => { setEditorState(editor); setNotSaved(true); }}
                   onEditorStateChange={(editor) => setEditorState(editor)}
                 />
               </Grid>
               <Grid item xs={12}>
-                <button onClick={preview}>Preview</button>
-                <button style={{ marginLeft: "8px" }} onClick={() => { }}>Print</button>
+                {notSaved ?
+                  <button className="btn btn-primary" onClick={preview}>SAVE & PREVIEW</button>
+                  :
+                  <Button onClick={preview} variant="outlined">SAVE & PREVIEW</Button>
+                }
+                {file && editorState && content &&
+                  <Button style={{ marginLeft: "8px" }} component={Link} to={{ pathname: "/printpdf", state: { data, content } }} variant="outlined">PRINT...</Button>
+                }
               </Grid>
             </Grid>
           </CardContent>
@@ -199,8 +221,8 @@ const Dashboard = () => {
           <CardHeader title="Viewer" />
           {viewer &&
             <Grid style={{ marginTop: "15px", marginLeft: "15px" }} item xs={12}>
-              <button disabled={dataIndex <= 0 && true} onClick={() => { setDataIndex(dataIndex - 1); preview(); }}>&lt;</button>
-              <button disabled={dataIndex >= data.length - 1 && true} style={{ marginLeft: "8px" }} onClick={() => { setDataIndex(dataIndex + 1); preview(); }}>&gt;</button>
+              <Button variant="outlined" disabled={dataIndex <= 0 && true} onClick={() => { setDataIndex(dataIndex - 1); preview(); }}>&lt;</Button>
+              <Button variant="outlined" disabled={dataIndex >= data.length - 1 && true} style={{ marginLeft: "8px" }} onClick={() => { setDataIndex(dataIndex + 1); preview(); }}>&gt;</Button>
             </Grid>
           }
           <CardContent>
