@@ -230,7 +230,7 @@ const Dashboard = () => {
                 <Grid item xs={12}>
                   <Editor
                     initialValue=''
-                    editorState={editorState} //I think we can populate this before rendering if the user populates a field with their template. So a useState prop.
+                    editorState={editorState}
                     init={{
                       invalid_elements: 'script[language|type|src]',
                       valid_children: '+body[style]',

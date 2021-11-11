@@ -44,7 +44,7 @@ const pages = [
   },
   {
     label: "Login",
-    href: "/Login"
+    href: "/login"
   },
 ];
 
@@ -62,7 +62,7 @@ function ElevationScroll(props) {
   return React.cloneElement(children, {
     elevation: trigger ? 4 : 0,
   });
-}
+};
 
 ElevationScroll.propTypes = {
   children: PropTypes.element.isRequired,
