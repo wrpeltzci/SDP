@@ -3,7 +3,7 @@ import { makeStyles } from '@mui/styles';
 import { Card, CardContent, CardHeader, Grid, Button, Divider, Typography } from '@mui/material';
 import { Editor } from '@tinymce/tinymce-react';
 import { Link } from 'react-router-dom';
-
+import TabCategory from './TabCategory';
 import FullWidthLayout from '../../components/Layout/FullwidthLayout';
 import CoreDrawer from '../../components/CoreDrawer/CoreDrawer';
 
@@ -56,11 +56,13 @@ const Dashboard = () => {
   const [visible, setVisible] = useState(false);
   const [content, setContent] = useState('');
   const [notSaved, setNotSaved] = useState(false);
-  const [open, setOpen] = useState(false);
+  const [openTab, setOpenTab] = useState(false);
+  const tabs = ['Company Info', 'Profile', 'Templates'];
 
-  const handleClose = () => {
-    setOpen(!open);
-  }
+
+  const toggleTab = (tab) => {
+    setOpenTab(!openTab ? tab : false);
+  };
 
   function updateViewer() {
     if (editorState) {
@@ -141,33 +143,19 @@ const Dashboard = () => {
         </Grid>
         <Grid item xs={12} md={6}>
           <Grid container spacing={2} justifyContent="flex-end">
-            <Grid item>
-              <Button
-                className="btn"
-                variant="outlined"
-                component="span"
-                onClick={handleClose}>
-                Company info
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button
-                className="btn"
-                variant="outlined"
-                component="span"
-                onClick={handleClose}>
-                Profile
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button
-                className="btn"
-                variant="outlined"
-                component="span"
-                onClick={handleClose}>
-                Templates
-              </Button>
-            </Grid>
+            {tabs.map((tab) => {
+              return (
+                <Grid item>
+                  <Button
+                    className="btn"
+                    variant="outlined"
+                    component="span"
+                    onClick={() => toggleTab(tab)}>
+                    {tab}
+                  </Button>
+                </Grid>
+              )
+            })}
           </Grid>
         </Grid>
         <Grid xs={12} className={classes.divider}><Divider /></Grid>
@@ -285,11 +273,12 @@ const Dashboard = () => {
       </Grid>
       <CoreDrawer
         anchor="left"
-        open={open}
-        onClose={handleClose}
+        open={openTab ? true : false}
+        onClose={toggleTab}
       >
         <div className={classes.drawer}>
-          Navigation for Profile, Templates, Company info will go here
+          <h5>{openTab}</h5>
+          <TabCategory tabs={tabs} openTab={openTab} />
         </div>
       </CoreDrawer>
     </FullWidthLayout>
