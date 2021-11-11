@@ -97,7 +97,7 @@ function profileTab() {
 };
 
 function TemplatesTab() {
-    const [option, setOption] = useState(null);
+    const [option, setOption] = useState("");
 
     function handleOptionChange(e) {
         setOption(e.target.value);
@@ -105,7 +105,7 @@ function TemplatesTab() {
 
     return (
         <>
-            <select class="form-select" value={option}
+            <select className="form-select" value={option}
                 onChange={e => handleOptionChange(e)}>
                 <option value="">Select Field</option>
                 {

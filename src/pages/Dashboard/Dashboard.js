@@ -143,9 +143,9 @@ const Dashboard = () => {
         </Grid>
         <Grid item xs={12} md={6}>
           <Grid container spacing={2} justifyContent="flex-end">
-            {tabs.map((tab) => {
+            {tabs.map((tab, key) => {
               return (
-                <Grid item>
+                <Grid key={key} item>
                   <Button
                     className="btn"
                     variant="outlined"
