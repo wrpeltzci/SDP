@@ -3,7 +3,7 @@ import { makeStyles } from '@mui/styles';
 import { Grid, Divider, Typography } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 
-import CoreNavBar from '../CoreNavBar';
+import CoreNavBar from '../_core/CoreNavBar';
 
 const useStyles = makeStyles((theme) => ({
   appBarSpacer: {
