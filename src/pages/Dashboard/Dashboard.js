@@ -5,7 +5,7 @@ import { Editor } from '@tinymce/tinymce-react';
 import { Link } from 'react-router-dom';
 import TabCategory from './TabCategory';
 import FullWidthLayout from '../../components/Layout/FullwidthLayout';
-import CoreDrawer from '../../components/CoreDrawer/CoreDrawer';
+import CoreDrawer from '../../components/_core/CoreDrawer/CoreDrawer';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -277,7 +277,6 @@ const Dashboard = () => {
         onClose={toggleTab}
       >
         <div className={classes.drawer}>
-          <h5>{openTab}</h5>
           <TabCategory tabs={tabs} openTab={openTab} />
         </div>
       </CoreDrawer>
