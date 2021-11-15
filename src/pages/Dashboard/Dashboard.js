@@ -191,7 +191,7 @@ const Dashboard = () => {
               </Grid>
             }
             {file && <Grid item xs={12} md={2}>
-              <select class="form-select" value={value}
+              <select className="form-select" value={value}
                 onChange={e => handleOptionChange(e)}>
                 <option value="">Select Field</option>
                 {
