@@ -2,7 +2,7 @@ import React from 'react';
 
 import CoreGridContainer from '../../../../components/_core/CoreGridContainer';
 import CoreGridItem from '../../../../components/_core/CoreGridItem';
-import TextBox from '../../../../components/_core/Inputs/TextBox';
+import TabTextField from '../../TabTextField';
 import { Divider } from '@mui/material';
 
 const company = [
@@ -53,12 +53,7 @@ const CompanyTab = () => {
       </CoreGridItem>
       {
         company.map((item, key) =>
-          <CoreGridItem md={12}>
-            <TextBox
-              label={item.label}
-              value={item.value}
-            />
-          </CoreGridItem>
+          <TabTextField key={item.label} value={item.value} category="company" />
         )
       }
     </CoreGridContainer>
