@@ -1,9 +1,9 @@
 import React from 'react';
-
+import TabTextField from '../../TabTextField';
 import CoreGridContainer from '../../../../components/_core/CoreGridContainer';
 import CoreGridItem from '../../../../components/_core/CoreGridItem';
-import TextBox from '../../../../components/_core/Inputs/TextBox';
 import { Divider } from '@mui/material';
+
 
 const profile = [
   {
@@ -38,12 +38,7 @@ const ProfileTab = () => {
       </CoreGridItem>
       {
         profile.map((item, key) =>
-          <CoreGridItem md={12}>
-            <TextBox
-              label={item.label}
-              value={item.value}
-            />
-          </CoreGridItem>
+          <TabTextField key={item.label} value={item.value} category="profile" />
         )
       }
     </CoreGridContainer>
