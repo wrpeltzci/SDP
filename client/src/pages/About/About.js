@@ -4,12 +4,12 @@ import {
   IconButton,
   Typography
 } from '@mui/material';
+import { MoreVert } from '@mui/icons-material';
 
 import FullWidthLayout from '../../components/Layout/FullwidthLayout';
 import CoreCard from '../../components/_core/CoreCard';
 import CoreGridContainer from '../../components/_core/CoreGridContainer';
 import CoreGridItem from '../../components/_core/CoreGridItem';
-import { MoreVert } from '@mui/icons-material';
 
 const cardData = [
   {

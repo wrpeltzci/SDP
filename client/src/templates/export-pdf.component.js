@@ -12,7 +12,7 @@ const ExportPdfComponent = (props) => {
   
   const componentRef = useRef();
   const company = {
-    logo: <img src={logo} />,
+    logo: <img src={logo} alt="logo" />,
     name: "Contra Costa Pathology Associates",
     abbrev: "CoCoPATH",
     address: "399 Taylor Blvd.suite 200 Pleasant Hill, CA 94523",

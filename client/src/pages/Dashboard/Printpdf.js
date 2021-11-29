@@ -13,7 +13,7 @@ const Printpdf = (props) => {
         data.map((item, key) => {
             let content = props.location.state.content;
             Object.keys(item).map((objKey, index) => {
-                content = content.replaceAll(`&lt;${objKey}&gt;`, data[key][objKey])
+                return content = content.replaceAll(`&lt;${objKey}&gt;`, data[key][objKey])
             })
             return (
                 <div className="container" key={key}>

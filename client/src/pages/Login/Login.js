@@ -1,8 +1,11 @@
-import React from 'react';
-import FullWidthLayout from '../../components/Layout/FullwidthLayout';
-import { Box, Avatar, Typography, CssBaseline, Checkbox, FormControlLabel, TextField, Container, Button, Grid, Link } from '@mui/material';
+import React, { useState } from 'react';
 import { makeStyles } from '@mui/styles';
+import { useDispatch } from 'react-redux';
+import { Box, Avatar, Typography, CssBaseline, Checkbox, FormControlLabel, TextField, Container, Button, Grid, Link } from '@mui/material';
+
+import FullWidthLayout from '../../components/Layout/FullwidthLayout';
 import { Copyright } from '../../components/Copyright';
+import Auth from '../../services/Auth';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -27,7 +30,21 @@ const useStyles = makeStyles((theme) => ({
 
 
 const Login = () => {
+  const [email, setEmail] = useState(null);
+  const [password, setPassword] = useState(null);
+  const dispatch = useDispatch();
   const classes = useStyles();
+
+  const handleEmailChange = (evt) => {
+      setEmail(evt.target.value);
+  }
+  const handlePasswordChange = (evt) => {
+      setEmail(evt.target.value);
+  }
+  
+  const onSubmit = () => {
+    dispatch(Auth.onLogin({ email, password }));
+  };
 
   return (
     <FullWidthLayout title="Login">
@@ -51,6 +68,7 @@ const Login = () => {
               name="email"
               autoComplete="email"
               autoFocus
+              onChange={handleEmailChange}
             />
             <TextField
               variant="outlined"
@@ -62,6 +80,7 @@ const Login = () => {
               type="password"
               id="password"
               autoComplete="current-password"
+              onChange={handlePasswordChange}
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
@@ -73,6 +92,7 @@ const Login = () => {
               variant="contained"
               color="primary"
               className={classes.submit}
+              onClick={onSubmit}
             >
               Log In
             </Button>
