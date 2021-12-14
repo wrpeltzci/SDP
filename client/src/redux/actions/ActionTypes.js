@@ -7,10 +7,6 @@ export const FETCH_ERROR = 'fetch_error';
 export const UPDATE_AUTH_USER = 'update_auth_user';
 export const UPDATE_LOAD_USER = 'update_load_user';
 export const SEND_FORGET_PASSWORD_EMAIL = 'send_forget_password_email';
-export const SIGNIN_GOOGLE_USER_SUCCESS = 'signin_google_user_success';
-export const SIGNIN_FACEBOOK_USER_SUCCESS = 'signin_facebook_user_success';
-export const SIGNIN_TWITTER_USER_SUCCESS = 'signin_twitter_user_success';
-export const SIGNIN_GITHUB_USER_SUCCESS = 'signin_github_user_SUCCESS';
 export const SIGNIN_USER_SUCCESS = 'signin_user_success';
 export const SIGNOUT_USER_SUCCESS = 'signout_user_success';
 

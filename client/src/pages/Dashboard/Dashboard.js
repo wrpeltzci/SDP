@@ -159,7 +159,7 @@ const Dashboard = () => {
             })}
           </Grid>
         </Grid>
-        <Grid xs={12} className={classes.divider}><Divider /></Grid>
+        <Grid item xs={12} className={classes.divider}><Divider /></Grid>
       </Grid>
 
       <Grid style={{ marginTop: "5px" }} container spacing={5} alignItems="stretch" justifyContent="space-between">

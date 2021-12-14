@@ -20,6 +20,9 @@ import Services from './pages/Services';
 import Terms from './pages/Terms';
 
 import theme from './theme';
+import Forgot from './pages/Forgot';
+import Signout from './pages/Signout';
+import ProtectedRoute from './components/Routes/ProtectedRoute';
 
 export const store = configureStore();
 
@@ -34,7 +37,7 @@ const App = () => {
                 <Router>
                   <Switch>
                     <Route exact path={'/'} component={Home} />
-                    <Route path={'/dashboard'} component={Dashboard} />
+                    <ProtectedRoute exact path={'/dashboard'} component={Dashboard} />
                     <Route path={'/printpdf'} component={Printpdf} />
                     <Route path={'/print'} component={ExportPdfComponent} />
                     <Route path={'/about'} component={About} />
@@ -42,8 +45,10 @@ const App = () => {
                     <Route path={'/demo'} component={Demo} />
                     <Route path={'/contact'} component={Contact} />
                     <Route path={'/login'} component={Login} />
+                    <Route path={'/forgot'} component={Forgot} />
                     <Route path={'/privacy'} component={Privacy} />
                     <Route path={'/terms'} component={Terms} />
+                    <Route path={'/signout'} component={Signout} />
                   </Switch>
                 </Router>
               </ThemeProvider>

@@ -1,7 +1,10 @@
 import * as React from 'react';
-import { makeStyles } from '@mui/styles';
 import PropTypes from 'prop-types';
+
+import { makeStyles } from '@mui/styles';
 import { AppBar, Toolbar, Button, CssBaseline, useScrollTrigger, Link, Typography } from '@mui/material';
+
+import { isAuth } from '../../../actions/auth';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -12,41 +15,20 @@ const useStyles = makeStyles((theme) => ({
     padding: 10,
     '&:hover': {
       textDecoration: 'none',
+      color: '#1976d2 !important',
+      backgroundColor: '#ffffff !important',
+    }
+  },
+  active: {
+    color: '#1976d2 !important',
+    backgroundColor: '#ffffff !important',
+    padding: 10,
+    '&:hover': {
+      textDecoration: 'none',
       color: '#ffffff'
     }
-  }
+  },
 }));
-
-const pages = [
-  {
-    label: "Home",
-    href: "/"
-  },
-  {
-    label: "Dashboard",
-    href: "/dashboard"
-  },
-  {
-    label: "About",
-    href: "/about"
-  },
-  {
-    label: "Services",
-    href: "/services"
-  },
-  {
-    label: "Demo",
-    href: "/demo"
-  },
-  {
-    label: "Contact",
-    href: "/contact"
-  },
-  {
-    label: "Login",
-    href: "/login"
-  },
-];
 
 function ElevationScroll(props) {
   const { children, window } = props;
@@ -72,6 +54,45 @@ ElevationScroll.propTypes = {
 const CoreNavBar = (props) => {
   const classes = useStyles();
   const currentLoc = window.location.pathname.split('/')[1];
+  const auth = isAuth();
+  const pages = [
+    {
+      id: "home",
+      label: "Home",
+      href: "/",
+    },
+    {
+      id: "dashboard",
+      label: "Dashboard",
+      href: "/dashboard",
+      secure: true
+    },
+    {
+      id: "about",
+      label: "About",
+      href: "/about",
+    },
+    {
+      id: "services",
+      label: "Services",
+      href: "/services",
+    },
+    {
+      id: "demo",
+      label: "Demo",
+      href: "/demo",
+    },
+    {
+      id: "contact",
+      label: "Contact",
+      href: "/contact",
+    },
+    {
+      id: "login",
+      label: !auth ? "Login" : 'Signout',
+      href: !auth ? "/login" : '/signout',
+    },
+  ];
 
   return (
     <React.Fragment>
@@ -86,9 +107,21 @@ const CoreNavBar = (props) => {
               currentLoc !== '' &&
               <div style={{ margin: 'auto' }}>
                 {
-                  pages.map((page, key) =>
-                    <Button component={Link} href={page.href} className={classes.link} key={key}>{page.label}</Button>
-                  )
+                  pages.map((page, key) => {
+                    console.log('tessss', currentLoc, page.id, page.id === currentLoc);
+                    return (
+                      !auth && page.secure ? null :
+                        <Button
+                          component={Link}
+                          href={page.href}
+                          className={currentLoc === page.id ? classes.active : classes.link}
+                          key={key} 
+                          variant="outlined"
+                        >
+                          {page.label}
+                        </Button>
+                    )
+                  })
                 }
               </div>
             }

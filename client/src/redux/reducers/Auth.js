@@ -7,7 +7,6 @@ const INIT_STATE = {
 };
 
 export default (state = INIT_STATE, action) => {
-  console.log("🚀 ~ file: Auth.js ~ line 11 ~ action.type", action.type)
   switch (action.type) {
     case UPDATE_AUTH_USER: {
       return {

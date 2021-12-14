@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import { useHistory } from "react-router-dom";
 import { makeStyles } from '@mui/styles';
-import { Box, Avatar, Typography, CssBaseline, Checkbox, FormControlLabel, Container, Button, Grid, Link } from '@mui/material';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import { Box, Avatar, Typography, CssBaseline, Container, Button, Grid, Link } from '@mui/material';
 
 import FullWidthLayout from '../../components/Layout/FullwidthLayout';
 import { Copyright } from '../../components/Copyright';
-import { signin, authenticate, isAuth } from '../../actions/auth';
 import TextBox from '../../components/_core/Inputs/TextBox';
+import { Info } from '@mui/icons-material';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -30,36 +29,20 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Login = () => {
+const Forgot = () => {
   const [email, setEmail] = useState(null);
-  const [password, setPassword] = useState(null);
-  const [inputError, setInputError] = useState(false);
-
   const classes = useStyles();
   let history = useHistory();
 
   const handleEmailChange = (evt) => {
     setEmail(evt.target.value);
   }
-  const handlePasswordChange = (evt) => {
-    setPassword(evt.target.value);
-  }
 
   const onSubmit = async (e) => {
     e.preventDefault();
 
-    const user = { email, password };
-    const authResult = await signin(user);
-
-    if (authResult !== undefined) {
-      authenticate(authResult, () => { })
-      if (isAuth()) {
-        history.push('/dashboard');
-      }
-    } else {
-      setInputError(true);
-    };
-
+    // const user = { email };
+    // const authResult = await forgot(user);    
   };
 
   return (
@@ -68,10 +51,10 @@ const Login = () => {
         <CssBaseline />
         <div className={classes.paper}>
           <Avatar className={classes.avatar}>
-            <LockOutlinedIcon />
+            <Info />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Log in
+            Forgot Password
           </Typography>
           <form className={classes.form} noValidate>
             <TextBox
@@ -82,22 +65,6 @@ const Login = () => {
               autoComplete="email"
               autoFocus
               onChange={handleEmailChange}
-              error={inputError}
-              />
-            <TextBox
-              required
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-              onChange={handlePasswordChange}
-              error={inputError}
-            />
-            {inputError && <label>Error: email and password don't match</label>}
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
             />
             <Button
               type="submit"
@@ -106,17 +73,17 @@ const Login = () => {
               color="primary"
               className={classes.submit}
               onClick={onSubmit}
-              disabled={!email || !password}
+              disabled={!email}
             >
-              Log In
+              Request Password
             </Button>
             <Grid container>
               <Grid item xs={6}>
-                <Link href="/forgot" variant="body2">
-                  Forgot password?
+                <Link href="/login" variant="body2">
+                  Login
                 </Link>
               </Grid>
-              <Grid item xs={6} style={{ textAlign: 'right' }}>
+              <Grid item xs={6} style={{textAlign: 'right'}}>
                 <Link href="/register" variant="body2">
                   {"Sign Up"}
                 </Link>
@@ -132,4 +99,4 @@ const Login = () => {
   )
 };
 
-export default Login;
+export default Forgot;
