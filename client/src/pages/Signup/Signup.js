@@ -33,7 +33,8 @@ const Signup = () => {
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
   const [verifyPass, setVerifyPass] = useState(null);
-  const [inputError, setInputError] = useState(null);
+  const [inputError, setInputError] = useState(false);
+  const [passError, setPassError] = useState(false);
   const [success, setSuccess] = useState(false);
 
   const classes = useStyles();
@@ -52,17 +53,19 @@ const Signup = () => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
+    setInputError(false);
+    setPassError(false);
 
     const user = { email, password };
 
     if (password !== verifyPass) {
-      setInputError("Passwords don't match");
+      setPassError(true);
     } else {
       const signupResult = await signup(user);
       if (signupResult !== undefined) {
         setSuccess(true);
       } else {
-        setInputError("An error occured");
+        setInputError(true);
       };
     }
   };
@@ -95,18 +98,19 @@ const Signup = () => {
               type="password"
               id="password"
               onChange={handlePasswordChange}
-              error={inputError}
+              error={inputError || passError}
             />
             <TextBox
               required
               name="password"
               label="Verify password"
               type="password"
-              id="password"
+              id="verifyPass"
               onChange={handleVerifyPassChange}
-              error={inputError}
+              error={inputError || passError}
             />
-            {inputError && <label>Error: {inputError}</label>}
+            {inputError && <label>Error: An error occured</label>}
+            {passError && <label>Error: Passwords don't match</label>}
             {success && <label>Success! Please verify e-mail</label>}
             <Button
               type="submit"
