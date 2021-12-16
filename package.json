@@ -2,6 +2,7 @@
   "name": "pdfprint-server",
   "version": "1.0.0",
   "type": "module",
+  "private": true,
   "scripts": {
     "client": "cd client && yarn start",
     "server": "nodemon server.js",
@@ -14,7 +15,8 @@
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.16.4",
-    "firebase": "^9.1.3"
+    "firebase": "^9.1.3",
+    "nodemon": "^2.0.15"
   },
   "devDependencies": {
     "concurrently": "^4.0.1"

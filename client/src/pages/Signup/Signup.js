@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { useHistory } from "react-router-dom";
 import { makeStyles } from '@mui/styles';
-import { Box, Avatar, Typography, CssBaseline, Checkbox, FormControlLabel, Container, Button, Grid, Link } from '@mui/material';
+import { Box, Avatar, Typography, CssBaseline, Container, Button, Grid, Link } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 
 import FullWidthLayout from '../../components/Layout/FullwidthLayout';
 import { Copyright } from '../../components/Copyright';
-import { signin, authenticate, isAuth } from '../../actions/auth';
+import { signup, signin, authenticate, isAuth } from '../../actions/auth';
 import TextBox from '../../components/_core/Inputs/TextBox';
 
 const useStyles = makeStyles((theme) => ({
@@ -28,12 +28,19 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(4, 1, 3),
   },
+  error: {
+    color: '#ff0000'
+  }
 }));
 
-const Login = () => {
+const Signup = () => {
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
+  const [verifyPass, setVerifyPass] = useState(null);
   const [inputError, setInputError] = useState(false);
+  const [passError, setPassError] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const classes = useStyles();
   let history = useHistory();
@@ -45,21 +52,37 @@ const Login = () => {
     setPassword(evt.target.value);
   }
 
+  const handleVerifyPassChange = (evt) => {
+    setVerifyPass(evt.target.value);
+  }
+
   const onSubmit = async (e) => {
     e.preventDefault();
+    setInputError(false);
+    setPassError(false);
+    setErrorMessage('');
 
     const user = { email, password };
-    const authResult = await signin(user);
 
-    if (authResult !== undefined) {
-      authenticate(authResult, () => { })
-      if (isAuth()) {
-        history.push('/dashboard');
-      }
+    if (password !== verifyPass) {
+      return setPassError(true);
     } else {
-      setInputError(true);
-    };
+      const signupResult = await signup(user);
+      if (signupResult.status !== undefined && signupResult.status !== 422) {
+        setSuccess(true);
+        const authResult = await signin(user);
 
+        if (authResult !== undefined) {
+          authenticate(authResult, () => { })
+          if (isAuth()) {
+            history.push('/dashboard');
+          }
+        }
+      } else {
+        setErrorMessage(signupResult.data.message);
+        return setInputError(true);
+      };
+    }
   };
 
   return (
@@ -71,7 +94,7 @@ const Login = () => {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Log in
+            Sign up
           </Typography>
           <form className={classes.form} noValidate>
             <TextBox
@@ -79,10 +102,9 @@ const Login = () => {
               id="email"
               label="Email Address"
               name="email"
-              autoComplete="email"
+              type="email"
               autoFocus
               onChange={handleEmailChange}
-              error={inputError}
             />
             <TextBox
               required
@@ -90,15 +112,21 @@ const Login = () => {
               label="Password"
               type="password"
               id="password"
-              autoComplete="current-password"
               onChange={handlePasswordChange}
-              error={inputError}
+              error={inputError || passError}
             />
-            {inputError && <label>Error: email and password don't match</label>}
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
+            <TextBox
+              required
+              name="password"
+              label="Verify password"
+              type="password"
+              id="verifyPass"
+              onChange={handleVerifyPassChange}
+              error={inputError || passError}
             />
+            {inputError && <label className={classes.error}>Error: {errorMessage}</label>}
+            {passError && <label>Error: Passwords don't match</label>}
+            {success && <label>Success! Please verify e-mail</label>}
             <Button
               type="submit"
               fullWidth
@@ -106,19 +134,16 @@ const Login = () => {
               color="primary"
               className={classes.submit}
               onClick={onSubmit}
-              disabled={!email || !password}
+              disabled={!email || !password || !verifyPass}
             >
-              Log In
+              Sign up
             </Button>
             <Grid container>
               <Grid item xs={6}>
-                <Link href="/forgot" variant="body2">
-                  Forgot password?
-                </Link>
               </Grid>
               <Grid item xs={6} style={{ textAlign: 'right' }}>
-                <Link href="/signup" variant="body2">
-                  {"Sign Up"}
+                <Link href="/login" variant="body2">
+                  {"Log In"}
                 </Link>
               </Grid>
             </Grid>
@@ -132,4 +157,4 @@ const Login = () => {
   )
 };
 
-export default Login;
+export default Signup;

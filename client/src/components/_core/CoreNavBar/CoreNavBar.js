@@ -108,7 +108,6 @@ const CoreNavBar = (props) => {
               <div style={{ margin: 'auto' }}>
                 {
                   pages.map((page, key) => {
-                    console.log('tessss', currentLoc, page.id, page.id === currentLoc);
                     return (
                       !auth && page.secure ? null :
                         <Button

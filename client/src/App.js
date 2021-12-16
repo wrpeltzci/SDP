@@ -23,6 +23,7 @@ import theme from './theme';
 import Forgot from './pages/Forgot';
 import Signout from './pages/Signout';
 import ProtectedRoute from './components/Routes/ProtectedRoute';
+import Signup from './pages/Signup';
 
 export const store = configureStore();
 
@@ -45,6 +46,7 @@ const App = () => {
                     <Route path={'/demo'} component={Demo} />
                     <Route path={'/contact'} component={Contact} />
                     <Route path={'/login'} component={Login} />
+                    <Route path={'/signup'} component={Signup} />
                     <Route path={'/forgot'} component={Forgot} />
                     <Route path={'/privacy'} component={Privacy} />
                     <Route path={'/terms'} component={Terms} />
