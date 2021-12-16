@@ -59,7 +59,43 @@ const userRoutes = (router) => {
       res.status(200).send({message: 'Signed out successful'});
     })
     res.status(400).send({message: 'Signed out unsuccessful'});
-  })
+  });
+
+  router.post("/signup", async (req, res) => {
+    const date = new Date().toISOString();
+    const auth = getAuth();
+    try {
+      if (!req.body) throw new Error(`New user not defined`);
+      const { email, password, ...userRest } = req.body;
+
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const { uid } = userCredential.user;
+      const docRef = doc(db, "users", uid);
+
+      const newUser = {
+        starred: false,
+        labels: [],
+        emailUsage: 0.0, // GB
+        status: "active",
+        suspendedBy: "Admin",
+        suspendedAt: date,
+        lastLoginAt: date,
+        createdAt: date,
+        updatedAt: date,
+        ...userRest,
+      };
+      await setDoc(docRef, newUser);
+      const docSnap = await getDoc(docRef);
+      res.send({ ...docSnap.data(), id: docSnap.id });
+    } catch (e) {
+      console.error("Error creating user: ", e);
+      res.status(422).json({status: 422, message: 'Account already exists'});
+    }
+  });
 };
 
 export default userRoutes;

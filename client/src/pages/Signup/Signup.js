@@ -3,9 +3,10 @@ import { useHistory } from "react-router-dom";
 import { makeStyles } from '@mui/styles';
 import { Box, Avatar, Typography, CssBaseline, Container, Button, Grid, Link } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+
 import FullWidthLayout from '../../components/Layout/FullwidthLayout';
 import { Copyright } from '../../components/Copyright';
-import { signup } from '../../actions/auth';
+import { signup, signin, authenticate, isAuth } from '../../actions/auth';
 import TextBox from '../../components/_core/Inputs/TextBox';
 
 const useStyles = makeStyles((theme) => ({
@@ -27,6 +28,9 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(4, 1, 3),
   },
+  error: {
+    color: '#ff0000'
+  }
 }));
 
 const Signup = () => {
@@ -36,6 +40,7 @@ const Signup = () => {
   const [inputError, setInputError] = useState(false);
   const [passError, setPassError] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const classes = useStyles();
   let history = useHistory();
@@ -55,17 +60,27 @@ const Signup = () => {
     e.preventDefault();
     setInputError(false);
     setPassError(false);
+    setErrorMessage('');
 
     const user = { email, password };
 
     if (password !== verifyPass) {
-      setPassError(true);
+      return setPassError(true);
     } else {
       const signupResult = await signup(user);
-      if (signupResult !== undefined) {
+      if (signupResult.status !== undefined && signupResult.status !== 422) {
         setSuccess(true);
+        const authResult = await signin(user);
+
+        if (authResult !== undefined) {
+          authenticate(authResult, () => { })
+          if (isAuth()) {
+            history.push('/dashboard');
+          }
+        }
       } else {
-        setInputError(true);
+        setErrorMessage(signupResult.data.message);
+        return setInputError(true);
       };
     }
   };
@@ -109,7 +124,7 @@ const Signup = () => {
               onChange={handleVerifyPassChange}
               error={inputError || passError}
             />
-            {inputError && <label>Error: An error occured</label>}
+            {inputError && <label className={classes.error}>Error: {errorMessage}</label>}
             {passError && <label>Error: Passwords don't match</label>}
             {success && <label>Success! Please verify e-mail</label>}
             <Button

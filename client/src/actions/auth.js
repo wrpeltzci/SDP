@@ -3,18 +3,19 @@ import cookie from 'js-cookie';
 
 const API = `${process.env.REACT_APP_API_URL}`;
 
-export const signup = user => {
-  return axios.post(`${API}/signup`, {
+export const signup = async user => {
+  return axios.post(`${API}/signup`, user, {
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(user)
+    }
   })
     .then(response => {
-      return response.json();
+      return response;
     })
-    .catch(err => console.log(err));
+    .catch(err => {
+      return err.response
+    });
 };
 
 export const signin = async user => {
