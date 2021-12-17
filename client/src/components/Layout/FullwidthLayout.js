@@ -26,13 +26,15 @@ const FullWidthLayout = ({ children, title, ...props }) => {
     <div className={classes.root}>
       <CssBaseline />
       <CoreNavBar />
+      <div style={{marginTop: 70}}>
       {title && <Grid container>
         <Grid item xs={12} md={6}>
           <Typography variant="h4">{title || ''}</Typography>
         </Grid>
-        <Grid xs={12} className={classes.divider}><Divider /></Grid>
+        <Grid item xs={12} className={classes.divider}><Divider /></Grid>
       </Grid>}
       {children}
+      </div>
     </div>
   )
 };
