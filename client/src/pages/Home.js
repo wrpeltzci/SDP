@@ -47,7 +47,7 @@ const Home = () => {
   return (
     <FullWidthLayout title="Welcome to PDF Builder">
       <Grid container justifyContent="center" alignItems="center">
-        <Grid item xs={4}>
+        <Grid item xs={12} md={4}>
           <Card className={classes.card}>
             <CardHeader title="Select a file to print" titleTypographyProps={classes.header} />
             <CardContent>
