@@ -1,10 +1,13 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
-import Stepper from '@mui/material/Stepper';
-import Step from '@mui/material/Step';
-import StepLabel from '@mui/material/StepLabel';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
+import {
+  Box,
+  Stepper,
+  Step,
+  StepLabel,
+  Button,
+  Typography
+} from '@mui/material';
+import { Check } from '@mui/icons-material';
 
 const CoreWizard = ({ steps }) => {
   const [activeStep, setActiveStep] = React.useState(0);
@@ -53,7 +56,7 @@ const CoreWizard = ({ steps }) => {
 
   return (
     <Box sx={{ width: '100%' }}>
-      <Stepper activeStep={activeStep}>
+      <Stepper activeStep={activeStep} alternativeLabel>
         {steps.map((item, index) => {
           const stepProps = {};
           const labelProps = {};
@@ -73,17 +76,17 @@ const CoreWizard = ({ steps }) => {
         })}
       </Stepper>
       {activeStep === steps.length ? (
-        <React.Fragment>
-          <Typography sx={{ mt: 2, mb: 1 }}>
-            All steps completed - you&apos;re finished
+        <>
+          <Typography sx={{ mt: 2, mb: 1 }} style={{textAlign: 'center', paddingTop: 40, paddingBottom: 40, fontWeight: 'bold'}}>
+           <Check style={{marginTop: -4}}/> Registration complete - you&apos;re finished
           </Typography>
           <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
             <Box sx={{ flex: '1 1 auto' }} />
             <Button onClick={handleReset}>Reset</Button>
           </Box>
-        </React.Fragment>
+        </>
       ) : (
-        <React.Fragment>
+        <>
           <div style={{minHeight: 250, paddingTop: 20}}>
             {steps[activeStep].Component}
           </div>
@@ -107,7 +110,7 @@ const CoreWizard = ({ steps }) => {
               {activeStep === steps.length - 1 ? 'Submit' : 'Next'}
             </Button>
           </Box>
-        </React.Fragment>
+        </>
       )}
     </Box>
   );
