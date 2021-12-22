@@ -6,6 +6,7 @@ const TextBox = (props) => {
     <TextField
       variant="outlined"
       margin="normal"
+      size="small"
       fullWidth
       {...props}
     />

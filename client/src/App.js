@@ -27,6 +27,7 @@ import Signup from './pages/Signup';
 import Business from './pages/Business';
 import Templates from './pages/Templates';
 import Profile from './pages/Profile';
+import Register from './pages/Register';
 
 export const store = configureStore();
 
@@ -53,6 +54,7 @@ const App = () => {
                     <Route path={'/business'} component={Business} />
                     <Route path={'/templates'} component={Templates} />
                     <Route path={'/privacy'} component={Privacy} />
+                    <Route path={'/register'} component={Register} />
                     <Route path={'/services'} component={Services} />
                     <Route path={'/signout'} component={Signout} />
                     <Route path={'/signup'} component={Signup} />

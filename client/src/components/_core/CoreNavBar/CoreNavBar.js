@@ -56,6 +56,11 @@ const CoreNavBar = () => {
       href: "/services",
     },
     {
+      id: "register",
+      label: "Registration",
+      href: "/register",
+    },
+    {
       id: "demo",
       label: "Demo",
       href: "/demo",
