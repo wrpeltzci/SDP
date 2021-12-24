@@ -7,7 +7,12 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import FullWidthLayout from '../../components/Layout/FullwidthLayout';
 import { Copyright } from '../../components/Copyright';
 import { signup, signin, authenticate, isAuth } from '../../actions/auth';
-import TextBox from '../../components/_core/Inputs/TextBox';
+import CoreWizard from '../../components/_core/CoreWizard';
+import CompanyInformation from './includes/CompanyInformation';
+import UserInformation from './includes/UserInformation';
+import CoreCard from '../../components/_core/CoreCard';
+import CoreGridContainer from '../../components/_core/CoreGridContainer';
+import CoreGridItem from '../../components/_core/CoreGridItem';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -34,9 +39,22 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Signup = () => {
-  const [email, setEmail] = useState(null);
-  const [password, setPassword] = useState(null);
-  const [verifyPass, setVerifyPass] = useState(null);
+  const [fields, setFields] = useState({
+    businessName: '',
+    address: '',
+    address1: '',
+    city: '',
+    state: '',
+    postalCode: '',
+    businessPhone: '',
+    businessEmail: '',
+    fax: '',
+    name: '',
+    email: '',
+    phone: '',
+    password: '',
+    verifyPass: ''
+  })
   const [inputError, setInputError] = useState(false);
   const [passError, setPassError] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -45,15 +63,8 @@ const Signup = () => {
   const classes = useStyles();
   let history = useHistory();
 
-  const handleEmailChange = (evt) => {
-    setEmail(evt.target.value);
-  }
-  const handlePasswordChange = (evt) => {
-    setPassword(evt.target.value);
-  }
-
-  const handleVerifyPassChange = (evt) => {
-    setVerifyPass(evt.target.value);
+  const handleFieldChange = (evt) => {
+    setFields({ ...fields, [evt.target.name]: evt.target.value })
   }
 
   const onSubmit = async (e) => {
@@ -62,9 +73,9 @@ const Signup = () => {
     setPassError(false);
     setErrorMessage('');
 
-    const user = { email, password };
+    const user = { ...fields };
 
-    if (password !== verifyPass) {
+    if (user.password !== user.verifyPass) {
       return setPassError(true);
     } else {
       const signupResult = await signup(user);
@@ -85,9 +96,22 @@ const Signup = () => {
     }
   };
 
+  const steps = [
+    {
+      label: 'Company Information',
+      optional: false,
+      Component: <CompanyInformation onChange={handleFieldChange} fields={fields} />
+    },
+    {
+      label: 'User Information',
+      optional: false,
+      Component: <UserInformation onChange={handleFieldChange} fields={fields} />
+    },
+  ];
+
   return (
     <FullWidthLayout>
-      <Container component="main" maxWidth="xs">
+      <Container component="main">
         <CssBaseline />
         <div className={classes.paper}>
           <Avatar className={classes.avatar}>
@@ -96,58 +120,22 @@ const Signup = () => {
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
-          <form className={classes.form} noValidate>
-            <TextBox
-              required
-              id="email"
-              label="Email Address"
-              name="email"
-              type="email"
-              autoFocus
-              onChange={handleEmailChange}
-            />
-            <TextBox
-              required
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              onChange={handlePasswordChange}
-              error={inputError || passError}
-            />
-            <TextBox
-              required
-              name="password"
-              label="Verify password"
-              type="password"
-              id="verifyPass"
-              onChange={handleVerifyPassChange}
-              error={inputError || passError}
-            />
-            {inputError && <label className={classes.error}>Error: {errorMessage}</label>}
-            {passError && <label>Error: Passwords don't match</label>}
-            {success && <label>Success! Please verify e-mail</label>}
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              className={classes.submit}
-              onClick={onSubmit}
-              disabled={!email || !password || !verifyPass}
-            >
-              Sign up
-            </Button>
-            <Grid container>
-              <Grid item xs={6}>
-              </Grid>
-              <Grid item xs={6} style={{ textAlign: 'right' }}>
-                <Link href="/login" variant="body2">
-                  {"Log In"}
-                </Link>
-              </Grid>
+          <CoreGridContainer>
+            <CoreGridItem xs={12}>
+              <CoreCard title="Onboarding">
+                <CoreWizard steps={steps} onSubmiter={onSubmit} validate={!fields.email || !fields.password || !fields.verifyPass}/>
+              </CoreCard>
+            </CoreGridItem>
+          </CoreGridContainer>
+          <Grid container>
+            <Grid item xs={6}>
             </Grid>
-          </form>
+            <Grid item xs={6} style={{ textAlign: 'right' }}>
+              <Link href="/login" variant="body2">
+                {"Log In"}
+              </Link>
+            </Grid>
+          </Grid>
         </div>
         <Box mt={8}>
           <Copyright />

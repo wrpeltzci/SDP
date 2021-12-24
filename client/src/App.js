@@ -27,7 +27,7 @@ import Signup from './pages/Signup';
 import Business from './pages/Business';
 import Templates from './pages/Templates';
 import Profile from './pages/Profile';
-import Register from './pages/Register';
+import Register from './pages/Signup';
 
 export const store = configureStore();
 

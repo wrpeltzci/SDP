@@ -4,7 +4,7 @@ import CoreGridContainer from '../../../components/_core/CoreGridContainer';
 import CoreGridItem from '../../../components/_core/CoreGridItem';
 import TextBox from '../../../components/_core/Inputs/TextBox';
 
-const UserInformation = () => {
+const UserInformation = ({ onChange, ...otherProps}) => {
   return (
     <CoreGridContainer>
       <CoreGridItem xs={4}>
@@ -14,6 +14,7 @@ const UserInformation = () => {
           label="Name"
           name="name"
           autoFocus
+          onChange={onChange}
         />
         <TextBox
           required
@@ -21,6 +22,14 @@ const UserInformation = () => {
           label="Title"
           type="title"
           id="title"
+          onChange={onChange}
+        />
+        <TextBox
+          name="phone"
+          label="phone"
+          type="phone"
+          id="phone"
+          onChange={onChange}
         />
         <TextBox
           required
@@ -28,13 +37,24 @@ const UserInformation = () => {
           label="Email Address"
           type="email"
           id="email"
+          onChange={onChange}
         />
         <TextBox
-          name="phone"
-          label="phone"
-          type="phone"
-          id="phone"
+          required
+          name="password"
+          label="Password"
+          type="password"
+          id="password"
+          onChange={onChange}
         />
+        <TextBox
+        required
+        name="verifyPass"
+        label="Verify password"
+        type="password"
+        id="verifyPass"
+        onChange={onChange}
+      />
       </CoreGridItem>
     </CoreGridContainer>
   )

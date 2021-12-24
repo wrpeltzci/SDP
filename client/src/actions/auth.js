@@ -31,6 +31,28 @@ export const signin = async user => {
     .catch(err => console.log(err));
 };
 
+export const getUser = async () => {
+  const authInfo = isAuth();
+
+  if (process.browser && authInfo) {
+    const cookieChecked = getCookie('token');
+    if (cookieChecked) {
+      return axios.get(`${API}/user/${authInfo.id}`, {uid: authInfo.id}, {
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${cookieChecked}`,
+            body: {id: authInfo.id}
+          }
+        })
+          .then(response => {
+            return response.data;
+          })
+          .catch(err => console.log(err));
+      }
+    }
+  }
+
 export const signout = () => {
   removeCookie('token');
   removeLocalStorage('user');

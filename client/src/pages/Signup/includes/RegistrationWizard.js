@@ -1,17 +1,40 @@
-import * as React from 'react';
+import React, { useState } from 'react';
+import { useHistory } from "react-router-dom";
 import {
   Box,
+  Typography,
   Stepper,
   Step,
   StepLabel,
-  Button,
-  Typography
+  Button
 } from '@mui/material';
 import { Check } from '@mui/icons-material';
 
-const CoreWizard = ({ steps, onSubmiter, validate, ...otherProps }) => {
+import { signup, signin, authenticate, isAuth } from '../../../actions/auth';
+import CompanyInformation from './CompanyInformation';
+import UserInformation from './UserInformation';
+
+const RegistrationWizard = ({ onChange, fields }) => {
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set());
+  const [inputError, setInputError] = useState(false);
+  const [passError, setPassError] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  let history = useHistory();
+
+  const steps = [
+    {
+      label: 'Company Information',
+      optional: false,
+      Component: <CompanyInformation onChange={onChange} fields={fields} />
+    },
+    {
+      label: 'User Information',
+      optional: false,
+      Component: <UserInformation onChange={onChange} fields={fields} />
+    },
+  ];
 
   const isStepSkipped = (step) => {
     return skipped.has(step);
@@ -23,17 +46,39 @@ const CoreWizard = ({ steps, onSubmiter, validate, ...otherProps }) => {
       newSkipped = new Set(newSkipped.values());
       newSkipped.delete(activeStep);
     }
-    
+
     console.log('next')
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
     setSkipped(newSkipped);
   };
 
-  const handleSubmit = (evt) => {
-    console.log('submit')
-    // GATHER DATA AND SUBMIT TO FIREBASE
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    onSubmiter(evt);
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    setInputError(false);
+    setPassError(false);
+    setErrorMessage('');
+
+    const user = { ...fields };
+
+    if (user.password !== user.verifyPass) {
+      return setPassError(true);
+    } else {
+      const signupResult = await signup(user);
+      if (signupResult.status !== undefined && signupResult.status !== 422) {
+        setSuccess(true);
+        const authResult = await signin(user);
+
+        if (authResult !== undefined) {
+          authenticate(authResult, () => { })
+          if (isAuth()) {
+            history.push('/dashboard');
+          }
+        }
+      } else {
+        setErrorMessage(signupResult.data.message);
+        return setInputError(true);
+      };
+    }
   };
 
   const handleBack = () => {
@@ -80,8 +125,8 @@ const CoreWizard = ({ steps, onSubmiter, validate, ...otherProps }) => {
       </Stepper>
       {activeStep === steps.length ? (
         <>
-          <Typography sx={{ mt: 2, mb: 1 }} style={{textAlign: 'center', paddingTop: 40, paddingBottom: 40, fontWeight: 'bold'}}>
-           <Check style={{marginTop: -4}}/> Registration complete - you&apos;re finished
+          <Typography sx={{ mt: 2, mb: 1 }} style={{ textAlign: 'center', paddingTop: 40, paddingBottom: 40, fontWeight: 'bold' }}>
+            <Check style={{ marginTop: -4 }} /> Registration complete - you&apos;re finished
           </Typography>
           <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
             <Box sx={{ flex: '1 1 auto' }} />
@@ -90,7 +135,7 @@ const CoreWizard = ({ steps, onSubmiter, validate, ...otherProps }) => {
         </>
       ) : (
         <>
-          <div style={{minHeight: 250, paddingTop: 20}}>
+          <div style={{ minHeight: 250, paddingTop: 20 }}>
             {steps[activeStep].Component}
           </div>
           <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
@@ -109,16 +154,16 @@ const CoreWizard = ({ steps, onSubmiter, validate, ...otherProps }) => {
               </Button>
             )}
 
-            <Button onClick={activeStep === steps.length - 1 ? 
-              handleSubmit : 
-              handleNext} disabled={(activeStep === steps.length - 1) && validate}>
+            <Button onClick={activeStep === steps.length - 1 ?
+              onSubmit :
+              handleNext} disabled={(activeStep === steps.length - 1)}>
               {activeStep === steps.length - 1 ? 'Submit' : 'Next'}
             </Button>
           </Box>
         </>
       )}
     </Box>
-  );
-}
+  )
+};
 
-export default CoreWizard;
+export default RegistrationWizard;

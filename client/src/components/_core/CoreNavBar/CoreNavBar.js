@@ -10,7 +10,8 @@ import {
   Avatar,
   Button,
   Tooltip,
-  MenuItem
+  MenuItem,
+  Hidden
 } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { makeStyles } from '@mui/styles';
@@ -24,6 +25,9 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: 'white !important',
     color: '#1976d2 !important'
   },
+  login: {
+    textAlign: 'right'
+  }
 }));
 
 const CoreNavBar = () => {
@@ -43,6 +47,18 @@ const CoreNavBar = () => {
       id: "dashboard",
       label: "Dashboard",
       href: "/dashboard",
+      secure: true
+    },
+    {
+      id: 'business',
+      label: "Company Info",
+      href: "/business",
+      secure: true
+    },
+    {
+      id: 'templates',
+      label: "Templates",
+      href: "/templates",
       secure: true
     },
     {
@@ -70,28 +86,18 @@ const CoreNavBar = () => {
       label: "Contact",
       href: "/contact",
     },
-    {
-      id: "login",
-      label: !auth ? "Login" : 'Signout',
-      href: !auth ? "/login" : '/signout',
-    },
   ];
 
   const settings = [
     {
-      id: 'profile',
-      label: "Profile",
-      href: "/profile"
+      id: "profile",
+      label: 'Profile',
+      href: '/profile',
     },
     {
-      id: 'business',
-      label: "Company Info",
-      href: "/business"
-    },
-    {
-      id: 'templates',
-      label: "Templates",
-      href: "/templates"
+      id: "signout",
+      label: 'Signout',
+      href: '/signout',
     }
   ];
 
@@ -153,13 +159,32 @@ const CoreNavBar = () => {
               }}
             >
               {pages.map((page, key) => (
-                <MenuItem key={key}
+                page.secure && auth ? <MenuItem key={key}
+                  component={Link}
+                  to={page.href}
+                >
+                  <Typography textAlign="center">{page.label}</Typography>
+                </MenuItem>
+                  :
+                  !page.secure && !auth && <MenuItem key={key}
                   component={Link}
                   to={page.href}
                 >
                   <Typography textAlign="center">{page.label}</Typography>
                 </MenuItem>
               ))}
+              <Hidden smDown>
+                {
+                  !auth &&
+                  <MenuItem id="login"
+                    component={Link}
+                    to={'/login'}
+                    className={classes.login}
+                  >
+                    <Typography textAlign="center">Login</Typography>
+                  </MenuItem>
+                }
+              </Hidden>
             </Menu>
           </Box>
           <Typography
@@ -170,9 +195,10 @@ const CoreNavBar = () => {
           >
             PDF Publisher
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page, key) => (
-              <Button
+          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }} mr='0'>
+            {pages.map((page, key) => {
+              return (
+                page.secure && auth ? <Button
                 component={Link}
                 to={page.href}
                 key={key}
@@ -182,38 +208,64 @@ const CoreNavBar = () => {
               >
                 {page.label}
               </Button>
-            ))}
+                  :
+                  !page.secure && !auth && <Button
+                    component={Link}
+                    to={page.href}
+                    key={key}
+                    onClick={handleCloseNavMenu}
+                    sx={{ my: 2, color: 'white', display: 'block' }}
+                    className={currentLoc === page.id || (currentLoc === '' && page.id === 'home') ? classes.active : ''}
+                  >
+                    {page.label}
+                  </Button>
+              )
+            })
+            }
           </Box>
-
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0, color: 'white' }} style={{padding: 10}}>
-                <Person/>
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: '45px' }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
+          {!auth && <Box sx={{ flexGrow: 0 }}>
+            <Button
+              component={Link}
+              to={'/login'}
+              id="login"
+              sx={{ my: 2, color: 'white', display: 'block' }}
+              className={currentLoc === 'login' ? classes.active : ''}
             >
-              {settings.map((setting, key) => (
-                <MenuItem key={key} component={Link} to={setting.href}>
-                  <Typography textAlign="center">{setting.label}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
+              Login
+            </Button>
+          </Box>}
+          {
+            auth &&
+            <Box sx={{ flexGrow: 0 }}>
+              <Tooltip title="Open settings">
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0, color: 'white' }} style={{ padding: 10 }}>
+                  <Person />
+                </IconButton>
+              </Tooltip>
+              <Menu
+                sx={{ mt: '45px' }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
+                {settings.map((setting, key) => (
+                  <MenuItem key={key} component={Link} to={setting.href}>
+                    <Typography textAlign="center">{setting.label}</Typography>
+                  </MenuItem>
+                ))}
+              </Menu>
+            </Box>
+          }
         </Toolbar>
       </Container>
     </AppBar>
