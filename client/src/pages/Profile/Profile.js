@@ -1,8 +1,9 @@
-import { Backdrop, CircularProgress, Grid } from '@mui/material';
 import React, { useEffect, useState } from 'react';
+import { Grid } from '@mui/material';
 import { getUser } from '../../actions/auth';
 
 import FullWidthLayout from '../../components/Layout/FullwidthLayout';
+import CoreSpinner from '../../components/_core/CoreSpinner';
 
 const Profile = () => {
   const [user, setUser] = useState();
@@ -14,7 +15,7 @@ const Profile = () => {
       setUser(userInfo);
       setTimeout(() => {
         setLoading(false);
-      }, 1000)
+      }, 500)
     }
     getUserInfo();
     return
@@ -23,12 +24,7 @@ const Profile = () => {
     <FullWidthLayout title="Profile">
       {
         loading
-          ? <Backdrop
-            sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-            open={loading}
-          >
-            <CircularProgress value="Loading" size={100} style={{ margin: 'auto', color: '#FFFFFF' }} />
-          </Backdrop> :
+          ? <CoreSpinner loading={loading} /> :
           <Grid container spacing={2}>
             <Grid item xs={4}>
               Name
