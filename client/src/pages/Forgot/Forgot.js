@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useHistory } from "react-router-dom";
 import { makeStyles } from '@mui/styles';
 import { Box, Avatar, Typography, CssBaseline, Container, Button, Grid, Link } from '@mui/material';
 
@@ -32,7 +31,6 @@ const useStyles = makeStyles((theme) => ({
 const Forgot = () => {
   const [email, setEmail] = useState(null);
   const classes = useStyles();
-  let history = useHistory();
 
   const handleEmailChange = (evt) => {
     setEmail(evt.target.value);

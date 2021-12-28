@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@mui/styles';
-import { Card, CardContent, CardHeader, Grid, Button, Divider, Typography } from '@mui/material';
+import { Card, CardContent, CardHeader, Grid, Button } from '@mui/material';
 import { Editor } from '@tinymce/tinymce-react';
 import { Link } from 'react-router-dom';
 
@@ -11,9 +11,6 @@ import CoreDrawer from '../../components/_core/CoreDrawer/CoreDrawer';
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex'
-  },
-  block: {
-    marginTop: theme.spacing(1)
   },
   actionBar: {
     border: '1 solid #ddd'
@@ -34,7 +31,9 @@ const useStyles = makeStyles((theme) => ({
   },
   copied: {
     color: 'green',
-    fontSize: '13px'
+    fontSize: '13px',
+    marginTop: "4px", 
+    marginBottom: "-39px"
   },
   drawer: {
     width: 200
@@ -44,15 +43,11 @@ const useStyles = makeStyles((theme) => ({
   },
   viewer: {
     marginTop: theme.spacing(1),
-    height: 'calc(100vh - 216px)'
+    height: 'calc(100vh - 222px)',
+    minHeight: 'calc(100vh - 222px)',
   },
   viewerButtons: {
-    marginTop: "15px", 
-    marginLeft: "15px"
-  },
-  copied: {
-    marginTop: "4px", 
-    marginBottom: "-39px"
+    paddingLeft: "15px"
   },
   file: {
     marginTop: "4px"
@@ -137,9 +132,10 @@ const Dashboard = () => {
         fileToJSON.map((item, index) => {
           if (index === 0) {
             Object.keys(item).map((objKey, index) => {
-              keys.push(objKey)
+              return keys.push(objKey)
             });
           };
+          return(<></>);
         });
         setFields(keys);
         if (fileError) {
@@ -202,8 +198,8 @@ const Dashboard = () => {
               </Grid>}
             </Grid>
           </Grid>
-          <Grid item xs={12} md={6} className={classes.block}>
-            <Card>
+          <Grid item xs={12} md={6} className={classes.viewer}>
+            <Card className={classes.card}>
               <CardHeader title="PDF Builder" />
               <CardContent className={classes.cardContent}>
                 <Grid container spacing={2} direction="column">
@@ -249,10 +245,10 @@ const Dashboard = () => {
             </Card>
           </Grid>
           <Grid item xs={12} md={6} className={classes.viewer}>
-            <Card className={classes.card}>
+            <Card className={classes.card} elevation={2}>
               <CardHeader title="Viewer" />
               {viewer &&
-                <Grid className={classes.viewerButtons} item xs={12}>
+                <Grid item xs={12} className={classes.viewerButtons}>
                   <Button variant="outlined" disabled={dataIndex <= 0 && true} onClick={() => { setDataIndex(dataIndex - 1); preview(); }}>&lt; </Button>
                   <Button variant="outlined" disabled={dataIndex >= data.length - 1 && true} style={{ marginLeft: "8px" }} onClick={() => { setDataIndex(dataIndex + 1); preview(); }}>&gt; </Button>
                 </Grid>

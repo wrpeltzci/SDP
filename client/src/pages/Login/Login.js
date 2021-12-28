@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useHistory } from "react-router-dom";
 import { makeStyles } from '@mui/styles';
-import { Box, Avatar, Typography, CssBaseline, Checkbox, FormControlLabel, Container, Button, Grid, Link, Backdrop, CircularProgress } from '@mui/material';
+import { Box, Avatar, Typography, CssBaseline, Checkbox, FormControlLabel, Container, Button, Grid, Link } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 
 import FullWidthLayout from '../../components/Layout/FullwidthLayout';
@@ -18,8 +18,11 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
   },
   avatar: {
-    margin: theme.spacing(1),
+    margin: 'auto',
     backgroundColor: theme.palette.secondary.main,
+  },
+  loginTitle: {
+    textAlign: 'center'
   },
   form: {
     width: '100%', // Fix IE 11 issue.
@@ -76,7 +79,7 @@ const Login = () => {
               <Avatar className={classes.avatar}>
                 <LockOutlinedIcon />
               </Avatar>
-              <Typography component="h1" variant="h5">
+              <Typography component="h1" variant="h5" className={classes.loginTitle}>
                 Log in
               </Typography>
               <form className={classes.form} noValidate>

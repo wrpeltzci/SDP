@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useHistory } from "react-router-dom";
 import { makeStyles } from '@mui/styles';
-import { Box, Avatar, Typography, CssBaseline, Checkbox, FormControlLabel, Container, Button, Grid, Link } from '@mui/material';
+import { Box, Avatar, Typography, CssBaseline, Container } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 
 import FullWidthLayout from '../../components/Layout/FullwidthLayout';
@@ -37,7 +37,7 @@ const Login = () => {
     signout();
     history.push('/login')
   });
-  
+
   return (
     <FullWidthLayout>
       <Container component="main" maxWidth="xs">

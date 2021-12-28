@@ -6,7 +6,7 @@ const INIT_STATE = {
   send_forget_password_email: false,
 };
 
-export default (state = INIT_STATE, action) => {
+const AuthReducer = (state = INIT_STATE, action) => {
   switch (action.type) {
     case UPDATE_AUTH_USER: {
       return {
@@ -31,3 +31,5 @@ export default (state = INIT_STATE, action) => {
       return state;
   }
 };
+
+export default AuthReducer;

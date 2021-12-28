@@ -6,8 +6,6 @@ import {
   IconButton,
   Typography,
   Menu,
-  Container,
-  Avatar,
   Button,
   Tooltip,
   MenuItem,
@@ -24,6 +22,24 @@ const useStyles = makeStyles((theme) => ({
   active: {
     backgroundColor: 'white !important',
     color: '#1976d2 !important'
+  },
+  toolbar: {
+    backgroundColor: '#41464b'
+  },
+  logo: {
+    height: 25,
+    width: 25
+  },
+  spacer: {
+    paddingRight: 10
+  },
+  title: {
+    marginTop: '4px !important',
+    textDecoration: 'none',
+    color: 'white',
+    '&:hover': {
+      color: 'white'
+    }
   },
   login: {
     textAlign: 'right'
@@ -118,87 +134,89 @@ const CoreNavBar = () => {
 
   return (
     <AppBar>
-      <Container maxWidth="xl">
-        <Toolbar disableGutters>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
-          >
-            PDF Publisher
-          </Typography>
+      <Toolbar className={classes.toolbar}>
+        <span className={classes.spacer}>
+          <img src="logo.png" className={classes.logo} alt="Clincial Squared Logo" />
+        </span>
+        <Typography
+          variant="h6"
+          noWrap
+          component="div"
+          sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
+        >
+          PDF Publisher
+        </Typography>
 
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{
-                display: { xs: 'block', md: 'none' },
-              }}
-            >
-              {pages.map((page, key) => (
-                page.secure && auth ? <MenuItem key={key}
-                  component={Link}
-                  to={page.href}
-                >
-                  <Typography textAlign="center">{page.label}</Typography>
-                </MenuItem>
-                  :
-                  !page.secure && !auth && <MenuItem key={key}
-                  component={Link}
-                  to={page.href}
-                >
-                  <Typography textAlign="center">{page.label}</Typography>
-                </MenuItem>
-              ))}
-              <Hidden smDown>
-                {
-                  !auth &&
-                  <MenuItem id="login"
-                    component={Link}
-                    to={'/login'}
-                    className={classes.login}
-                  >
-                    <Typography textAlign="center">Login</Typography>
-                  </MenuItem>
-                }
-              </Hidden>
-            </Menu>
-          </Box>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
+        <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+          <IconButton
+            size="large"
+            aria-label="account of current user"
+            aria-controls="menu-appbar"
+            aria-haspopup="true"
+            onClick={handleOpenNavMenu}
+            color="inherit"
           >
-            PDF Publisher
-          </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }} mr='0'>
-            {pages.map((page, key) => {
-              return (
-                page.secure && auth ? <Button
+            <MenuIcon />
+          </IconButton>
+          <Menu
+            id="menu-appbar"
+            anchorEl={anchorElNav}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'left',
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'left',
+            }}
+            open={Boolean(anchorElNav)}
+            onClose={handleCloseNavMenu}
+            sx={{
+              display: { xs: 'block', md: 'none' },
+            }}
+          >
+            {pages.map((page, key) => (
+              page.secure && auth ? <MenuItem key={key}
+                component={Link}
+                to={page.href}
+              >
+                <Typography textAlign="center">{page.label}</Typography>
+              </MenuItem>
+                :
+                !page.secure && !auth && <MenuItem key={key}
+                  component={Link}
+                  to={page.href}
+                >
+                  <Typography textAlign="center">{page.label}</Typography>
+                </MenuItem>
+            ))}
+            <Hidden smDown>
+              {
+                !auth &&
+                <MenuItem id="login"
+                  component={Link}
+                  to={'/login'}
+                  className={classes.login}
+                >
+                  <Typography textAlign="center">Login</Typography>
+                </MenuItem>
+              }
+            </Hidden>
+          </Menu>
+        </Box>
+        <Typography
+          variant="h6"
+          noWrap
+          component="div"
+          sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
+        >
+          PDF Publisher
+        </Typography>
+        <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }} mr='0'>
+          {pages.map((page, key) => {
+            return (
+              page.secure && auth ? <Button
                 component={Link}
                 to={page.href}
                 key={key}
@@ -208,66 +226,65 @@ const CoreNavBar = () => {
               >
                 {page.label}
               </Button>
-                  :
-                  !page.secure && !auth && <Button
-                    component={Link}
-                    to={page.href}
-                    key={key}
-                    onClick={handleCloseNavMenu}
-                    sx={{ my: 2, color: 'white', display: 'block' }}
-                    className={currentLoc === page.id || (currentLoc === '' && page.id === 'home') ? classes.active : ''}
-                  >
-                    {page.label}
-                  </Button>
-              )
-            })
-            }
-          </Box>
-          {!auth && <Box sx={{ flexGrow: 0 }}>
-            <Button
-              component={Link}
-              to={'/login'}
-              id="login"
-              sx={{ my: 2, color: 'white', display: 'block' }}
-              className={currentLoc === 'login' ? classes.active : ''}
-            >
-              Login
-            </Button>
-          </Box>}
-          {
-            auth &&
-            <Box sx={{ flexGrow: 0 }}>
-              <Tooltip title="Open settings">
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0, color: 'white' }} style={{ padding: 10 }}>
-                  <Person />
-                </IconButton>
-              </Tooltip>
-              <Menu
-                sx={{ mt: '45px' }}
-                id="menu-appbar"
-                anchorEl={anchorElUser}
-                anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu}
-              >
-                {settings.map((setting, key) => (
-                  <MenuItem key={key} component={Link} to={setting.href}>
-                    <Typography textAlign="center">{setting.label}</Typography>
-                  </MenuItem>
-                ))}
-              </Menu>
-            </Box>
+                :
+                !page.secure && !auth && <Button
+                  component={Link}
+                  to={page.href}
+                  key={key}
+                  onClick={handleCloseNavMenu}
+                  sx={{ my: 2, color: 'white', display: 'block' }}
+                  className={currentLoc === page.id || (currentLoc === '' && page.id === 'home') ? classes.active : ''}
+                >
+                  {page.label}
+                </Button>
+            )
+          })
           }
-        </Toolbar>
-      </Container>
+        </Box>
+        {!auth && <Box sx={{ flexGrow: 0 }}>
+          <Button
+            component={Link}
+            to={'/login'}
+            id="login"
+            sx={{ my: 2, color: 'white', display: 'block' }}
+            className={currentLoc === 'login' ? classes.active : ''}
+          >
+            Login
+          </Button>
+        </Box>}
+        {
+          auth &&
+          <Box sx={{ flexGrow: 0 }}>
+            <Tooltip title="Open settings">
+              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0, color: 'white' }} style={{ padding: 10 }}>
+                <Person />
+              </IconButton>
+            </Tooltip>
+            <Menu
+              sx={{ mt: '45px' }}
+              id="menu-appbar"
+              anchorEl={anchorElUser}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              open={Boolean(anchorElUser)}
+              onClose={handleCloseUserMenu}
+            >
+              {settings.map((setting, key) => (
+                <MenuItem key={key} component={Link} to={setting.href}>
+                  <Typography textAlign="center">{setting.label}</Typography>
+                </MenuItem>
+              ))}
+            </Menu>
+          </Box>
+        }
+      </Toolbar>
     </AppBar>
   );
 };

@@ -130,10 +130,14 @@ const userRoutes = (router) => {
 
   router.get("/signout", async (req, res) => {
     const auth = getAuth();
-    signOut(auth).then(() => {
-      res.status(200).send({ message: 'Signed out successful' });
-    })
-    res.status(400).send({ message: 'Signed out unsuccessful' });
+
+    signOut(auth)
+      .then(() => {
+        res.status(200).send({ message: 'Signed out successful' });
+      })
+      .catch(err => {
+        res.status(400).send({ message: `Signed out unsuccessful ${err}` });
+      })
   });
 
 

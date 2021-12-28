@@ -7,7 +7,7 @@ const CoreSpinner = ({ loading }) => {
       sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
       open={loading}
     >
-      <CircularProgress value="Loading" size={100} style={{ margin: 'auto', color: '#FFFFFF' }} />
+      <CircularProgress size={100} style={{ margin: 'auto', color: '#FFFFFF' }} />
     </Backdrop>
   )
 }

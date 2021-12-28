@@ -37,21 +37,21 @@ export const getUser = async () => {
   if (process.browser && authInfo) {
     const cookieChecked = getCookie('token');
     if (cookieChecked) {
-      return axios.get(`${API}/user/${authInfo.id}`, {uid: authInfo.id}, {
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${cookieChecked}`,
-            body: {id: authInfo.id}
-          }
+      return axios.get(`${API}/user/${authInfo.id}`, { uid: authInfo.id }, {
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${cookieChecked}`,
+          body: { id: authInfo.id }
+        }
+      })
+        .then(response => {
+          return response.data;
         })
-          .then(response => {
-            return response.data;
-          })
-          .catch(err => console.log(err));
-      }
+        .catch(err => console.log(err));
     }
   }
+}
 
 export const signout = () => {
   removeCookie('token');
@@ -59,7 +59,6 @@ export const signout = () => {
 
   return axios.get(`${API}/signout`)
     .then(response => {
-    console.log("🚀 ~ file: auth.js ~ line 40 ~ signout ~ response", response)
       console.log('signout success');
     })
     .catch(err => console.log(err));
@@ -101,7 +100,7 @@ export const removeLocalStorage = key => {
 // autheticate user by pass data to cookie and localstorage
 export const authenticate = (data, next) => {
   setCookie('token', data.token);
-  setLocalStorage('user', {email: data.email, id: data.id });
+  setLocalStorage('user', { email: data.email, id: data.id });
   next();
 };
 

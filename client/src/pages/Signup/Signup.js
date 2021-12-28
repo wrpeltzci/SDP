@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useHistory } from "react-router-dom";
 import { makeStyles } from '@mui/styles';
-import { Box, Avatar, Typography, CssBaseline, Container, Button, Grid, Link } from '@mui/material';
+import { Box, Avatar, Typography, CssBaseline, Container, Grid, Link } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 
 import FullWidthLayout from '../../components/Layout/FullwidthLayout';

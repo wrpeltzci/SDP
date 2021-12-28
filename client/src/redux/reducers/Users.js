@@ -12,7 +12,7 @@ const INIT_STATE = {
   currentUser: null,
 };
 
-export default (state = INIT_STATE, action) => {
+const UsersReducer = (state = INIT_STATE, action) => {
   switch (action.type) {
     case GET_USERS: {
       return {
@@ -54,3 +54,5 @@ export default (state = INIT_STATE, action) => {
       return state;
   }
 };
+
+export default UsersReducer;
